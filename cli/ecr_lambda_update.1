@@ -1,0 +1,39 @@
+.\" ecr_lambda_update(1) -- ECR Image Push and Lambda Update Script
+.SH NAME
+ecr_lambda_update \- automate Docker image push to ECR and Lambda update
+.SH SYNOPSIS
+.B ecr_lambda_update
+[\-r \fIREPO_NAME\fP]
+[\-l \fILAMBDA_NAME\fP]
+[\-i \fIIMAGE_NAME\fP]
+[\-g \fIAWS_REGION\fP]
+.SH DESCRIPTION
+This script automates the process of pushing a Docker image to Amazon Elastic Container Registry (ECR) and updating an AWS Lambda function with the latest image.
+.PP
+.B ecr_lambda_update
+accepts the following options:
+.TP
+.B \-r \fIREPO_NAME\fP
+Specify the ECR repository name.
+.TP
+.B \-l \fILAMBDA_NAME\fP
+Specify the Lambda function name.
+.TP
+.B \-i \fIIMAGE_NAME\fP
+(Optional) Specify a custom Docker image name (defaults to "latest").
+.TP
+.B \-g \fIAWS_REGION\fP
+(Optional) Specify the AWS region (defaults to "us-west-2").
+.SH EXAMPLES
+To push a Docker image to ECR and update a Lambda function:
+.B ecr_lambda_update -r my-ecr-repo -l my-lambda-function -i custom-image -g us-east-1
+.SH SEE ALSO
+.BR docker (1),
+.BR aws (1),
+.BR jq (1)
+.SH AUTHOR
+Agustín Vargas Toro
+.SH BUGS
+Report any bugs to <fustincho@tuta.io>.
+.SH VERSION
+1.0
