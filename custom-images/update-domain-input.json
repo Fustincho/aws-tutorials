@@ -1,0 +1,12 @@
+{
+    "DefaultUserSettings": {
+        "KernelGatewayAppSettings": {
+            "CustomImages": [
+                {
+                    "ImageName": "test-image",
+                    "AppImageConfigName": "test-image-config"
+                }
+            ]
+        }
+    }
+}

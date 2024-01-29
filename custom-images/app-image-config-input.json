@@ -1,0 +1,20 @@
+{
+    "AppImageConfigName": "test-image-config",
+    "KernelGatewayImageConfig": {
+        "KernelSpecs": [
+            {
+                "Name": "env1",
+                "DisplayName": "Python 3.11 [pip env: Faker]"
+            },
+            {
+                "Name": "env2",
+                "DisplayName": "Python 3.11 [pip env: matplotlib]"
+            }
+        ],
+        "FileSystemConfig": {
+            "MountPath": "/root",
+            "DefaultUid": 0,
+            "DefaultGid": 0
+        }
+    }
+}
