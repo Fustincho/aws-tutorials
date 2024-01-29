@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 import boto3
@@ -38,8 +39,8 @@ def upload_dataset_to_s3(dataset_name, bucket_name, cleanup=True):
     upload_to_s3('test_data.csv', bucket_name, prefix, 'test_data.csv')
 
     print('Files uploaded to S3 successfully.')
-    
-    if cleanup == True:
+
+    if cleanup is True:
         # Delete local files after uploading to S3
         os.remove('train_data.csv')
         os.remove('test_data.csv')

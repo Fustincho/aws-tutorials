@@ -2,6 +2,7 @@ import boto3
 import json
 from botocore.exceptions import ClientError
 
+
 def get_secret(secret_key):
 
     secret_name = "aws-samples"
@@ -22,7 +23,7 @@ def get_secret(secret_key):
         # For a list of exceptions thrown, see
         # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
         raise e
-    
+
     secrets = json.loads(get_secret_value_response['SecretString'])
-    
+
     return secrets[secret_key]
