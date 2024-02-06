@@ -21,6 +21,48 @@ The content is organized into a series of Jupyter notebooks, each dedicated to a
 - Understanding of Python and foundational machine learning concepts.
 - Access to an AWS account and basic knowledge of AWS services.
 - Familiarity with Jupyter notebooks.
+- You need to create an AWS Identity and Access Management (IAM) role that grants the necessary permissions for Amazon SageMaker to access resources such as S3 buckets, execute training jobs, and deploy models. Here's an example of how this policy may look like:
+
+```json
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "s3:GetObject",
+                    "s3:PutObject",
+                    "s3:ListBucket",
+                    "s3:DeleteObject"
+                ],
+                "Resource": [
+                    "arn:aws:s3:::your-s3-bucket/*",
+                    "arn:aws:s3:::your-s3-bucket"
+                ]
+            },
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "sagemaker:CreateModel",
+                    "sagemaker:CreateEndpointConfig",
+                    "sagemaker:CreateEndpoint",
+                    "sagemaker:DeleteEndpoint",
+                    "sagemaker:DeleteEndpointConfig"
+                ],
+                "Resource": "*"
+            },
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "sagemaker:CreateTrainingJob",
+                    "sagemaker:DescribeTrainingJob",
+                    "sagemaker:StopTrainingJob"
+                ],
+                "Resource": "*"
+            }
+        ]
+    }
+```
 
 ## Getting Started
 
