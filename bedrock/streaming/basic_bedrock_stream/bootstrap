@@ -1,0 +1,31 @@
+#! /usr/bin/env python3.11
+import os, sys, requests,json
+
+# Get Lambda Environment Variables
+AWS_LAMBDA_RUNTIME_API = os.getenv("AWS_LAMBDA_RUNTIME_API")
+LAMBDA_TASK_ROOT = os.getenv("LAMBDA_TASK_ROOT")
+
+# Set path to import your handler function
+sys.path.append(LAMBDA_TASK_ROOT)
+from lambda_function import lambda_handler
+
+# API URL Templates and Headers
+INVOCATION_URL = f"http://{AWS_LAMBDA_RUNTIME_API}/2018-06-01/runtime/invocation/next"
+RESPONSE_URL_TEMPLATE = "http://{}/2018-06-01/runtime/invocation/{}/response"
+HEADERS = {
+      "Lambda-Runtime-Function-Response-Mode": "streaming",
+      "Transfer-Encoding": "chunked",
+}
+
+# Run a loop to get the lambda invocation events
+while True:
+# When Lambda invocation event is received fetch the event
+      response = requests.get(INVOCATION_URL, stream=True)
+      # Extract event data
+      event_data = json.loads(response.text)
+      # Extract invocation id
+      invocation_id = response.headers.get("Lambda-Runtime-Aws-Request-Id")
+      # Create response URL
+      response_url = RESPONSE_URL_TEMPLATE.format(AWS_LAMBDA_RUNTIME_API, invocation_id)
+      # Post the response
+      requests.post(response_url, headers=HEADERS, data=lambda_handler(event_data, None))
