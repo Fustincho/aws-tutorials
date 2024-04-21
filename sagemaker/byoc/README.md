@@ -8,7 +8,7 @@ Fear not if you're not a Reinforcement Learning guru! The primary goal here isn'
 
 ### Overview
 
-In the first part of our mission, we'll focus on the initial stages of using your own container with SageMaker:
+In the [first part of our mission](01_build_and_train.ipynb), we'll focus on the initial stages of using your own container with SageMaker:
 
 1. **Build Your Training Container:** First, we'll cover the essentials of crafting your very own Docker container suitable for training models. This includes setting up the necessary dependencies and environment configurations.
 2. **Create and Run a Training Job:** Once our container is ready, you'll learn how to launch a training job in SageMaker using this custom setup. We'll guide you through configuring the SageMaker training job to use your container, so our virtual lander learns how to touch down smoothly on the moon.
