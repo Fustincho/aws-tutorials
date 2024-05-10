@@ -2,16 +2,63 @@
 
 This script automates the process of pushing a Docker image to [Amazon Elastic Container Registry (ECR)](https://aws.amazon.com/ecr/) and updating an [AWS Lambda](https://aws.amazon.com/lambda/) function with the latest image. It accepts the ECR repository name and Lambda function name as command-line arguments, dynamically fetches the ECR repository URI, builds, tags, and pushes the Docker image to ECR, and finally updates the Lambda function with the new Docker image.
 
+## Requirements
+
+To run this script you require an user with permissions specified in the following policy to function correctly. The policy grants access to read and push images to a private Amazon ECR repository, as well as update and fetch Lambda function code and configurations:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:DescribeRepositories",
+                "ecr:DescribeImages",
+                "ecr:ListTagsForResource",
+                "ecr:DescribeImageScanFindings",
+                "ecr:PutImage",
+                "ecr:InitiateLayerUpload",
+                "ecr:UploadLayerPart",
+                "ecr:CompleteLayerUpload",
+                "ecr:GetAuthorizationToken"
+            ],
+            "Resource": "arn:aws:ecr:your-region:your-account-id:repository/your-repository-name"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "lambda:UpdateFunctionCode",
+                "lambda:GetFunction",
+                "lambda:GetFunctionConfiguration"
+            ],
+            "Resource": "arn:aws:lambda:region:account-id:function:function-name"
+        }
+    ]
+}
+```
+
 ## How to Use
 
-Open the `ecr_lambda_update.sh` file and set default values if needed. The script requires the ECR repository name (-r) and the Lambda function name (-l) as command-line arguments.
+The script has four parameters:
+
+- ECR_REPO_NAME (-r): The name of the Amazon ECR repository where Docker images are managed. **This parameter is required**.
+- LAMBDA_FUNCTION_NAME (-l): The name of the AWS Lambda function to be updated. **This parameter is required**.
+- IMAGE_NAME (-i): The tag or version of the Docker image to use. Defaults to "latest" if not specified.
+- AWS_REGION (-g): The AWS region where both the ECR repository and the Lambda function are located. Defaults to "us-east-1" if not specified.
+
+**Optional:** open the `ecr_lambda_update.sh` file and edit the default values.
 
 ### Make the Script Executable
 
 ```bash
 chmod +x ecr_lambda_update.sh
-Run the Script:
 ```
+
+Then you can run the script. Here's an example:
 
 ```bash
 ./ecr_lambda_update.sh -r your-ecr-repo -l your-lambda-function -i custom-image-name

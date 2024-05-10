@@ -1,6 +1,15 @@
 #!/bin/bash
 
-# Default values
+# Create a custom log message
+ECHO_PREFIX="[INFO] - "
+log_message() {
+  echo "$ECHO_PREFIX$1"
+}
+
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+# Parameter default values
 ECR_REPO_NAME=""
 LAMBDA_FUNCTION_NAME=""
 IMAGE_NAME="latest"
@@ -47,19 +56,56 @@ if [ -z "$ECR_REPO_URI" ]; then
   exit 1
 fi
 
-# Docker build and tag
 docker build -t my-image:$IMAGE_NAME .
 docker tag my-image:$IMAGE_NAME $ECR_REPO_URI:$IMAGE_NAME
 
 # AWS ECR login (this will authenticate Docker with your ECR registry)
+log_message "Logging in ECR"
 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO_URI
 
-# Docker push
 docker push $ECR_REPO_URI:$IMAGE_NAME
 
-echo "Image pushed to ECR successfully."
+log_message "Image pushed to $ECR_REPO_NAME:$IMAGE_NAME successfully."
 
+###### TRACK THE UPDATE STATUS
+
+log_message "Updating $LAMBDA_FUNCTION_NAME:"
 # Update Lambda function code with the new Docker image
 aws  --no-cli-pager lambda update-function-code --function-name $LAMBDA_FUNCTION_NAME --image-uri $ECR_REPO_URI:$IMAGE_NAME --region $AWS_REGION
 
-echo "Lambda function '$LAMBDA_FUNCTION_NAME' updated with the new Docker image ('$IMAGE_NAME') in region '$AWS_REGION'."
+# Initialize the last update status variable
+LAST_UPDATE_STATUS="InProgress"
+
+# Initialize the progress dots
+PROGRESS_MESSAGE="Update in progress"
+PROGRESS_DOTS=""
+
+# Loop while the update is still in progress
+while [ "$LAST_UPDATE_STATUS" == "InProgress" ]; do
+    # Retrieve the last update status of the Lambda function
+    LAST_UPDATE_STATUS=$(aws lambda get-function \
+        --function-name "$LAMBDA_FUNCTION_NAME" \
+        --query 'Configuration.LastUpdateStatus' \
+        --output text)
+
+    # Append a dot to the progress message
+    PROGRESS_DOTS+="."
+
+    # Print the current progress message
+    echo -ne "$PROGRESS_MESSAGE$PROGRESS_DOTS\r"
+
+    # If still in progress, sleep before retrying
+    if [ "$LAST_UPDATE_STATUS" == "InProgress" ]; then
+        sleep 1
+    fi
+done
+
+# Determine the final status
+if [ "$LAST_UPDATE_STATUS" == "Successful" ]; then
+    echo -e "$PROGRESS_MESSAGE${PROGRESS_DOTS}!"
+else
+    echo -e "$PROGRESS_MESSAGE${PROGRESS_DOTS}X\nLambda function update failed. Status: $LAST_UPDATE_STATUS"
+    exit 1
+fi
+
+echo "The Lambda function '$LAMBDA_FUNCTION_NAME' ($AWS_REGION) was successfully updated with the image: $ECR_REPO_NAME:$IMAGE_NAME"
