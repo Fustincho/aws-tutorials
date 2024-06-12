@@ -21,7 +21,7 @@ The content is organized into a series of Jupyter notebooks, each dedicated to a
 - Understanding of Python and foundational machine learning concepts.
 - Access to an AWS account and basic knowledge of AWS services.
 - Familiarity with Jupyter notebooks.
-- You need to create an AWS Identity and Access Management (IAM) role that grants the necessary permissions for Amazon SageMaker to access resources such as S3 buckets, execute training jobs, and deploy models. Here's an example of how this policy may look like:
+- You need to run these notebooks within a SageMaker service (e.g., Studio, Studio Classic, Notebook instance). Ensure that this service has an AWS Identity and Access Management (IAM) role with the necessary permissions for Amazon SageMaker to access resources such as S3 buckets, execute training jobs, and deploy models. Here’s an example of a basic policy:
 
 ```json
     {
@@ -66,7 +66,7 @@ The content is organized into a series of Jupyter notebooks, each dedicated to a
 
 ## Getting Started
 
-To commence, clone this repository and navigate to the respective notebook directories. Each notebook is equipped with comprehensive instructions and explanations, guiding through each pipeline component.
+To start, clone this repository and navigate to the respective notebook directories. Each notebook is equipped with comprehensive instructions and explanations, guiding through each pipeline component.
 
 ## Contributing
 
