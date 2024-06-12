@@ -16,6 +16,12 @@ The content is organized into a series of Jupyter notebooks, each dedicated to a
 
 1. [Your first Sagemaker Endpoint](unit_1.ipynb): This unit introduces the foundational steps to create and deploy a machine learning model using AWS Sagemaker. The primary focus is on setting up a basic Sagemaker endpoint, which serves as a critical component for model hosting and real-time predictions.
 
+1.1. *(Optional)* [Improving Efficiency with SageMaker Warm Pools](optional_1.ipynb): This unit demonstrates how to use SageMaker Warm Pools to reduce the startup time and improve the efficiency of training jobs. We will build on previous units by reusing the training job structure and data, adding the warm pool feature, and training multiple models with varying hyperparameters to observe the reduced training time.
+
+2. [Automating Workflows with SageMaker Pipelines](unit_2.ipynb): Learn to create and manage automated workflows for machine learning models using SageMaker Pipelines. We'll build on Unit 1 by reloading essential components, initializing the SageMaker session, and using the XGBoost Docker image for consistency.
+
+3. [Enhancing Models with Hyperparameter Tuning](unit_3.ipynb): Discover how to improve your model's accuracy with SageMaker's Hyperparameter Tuning. This unit focuses on fine-tuning model settings and integrating these optimizations into your pipelines for seamless automation.
+
 ## Prerequisites
 
 - Understanding of Python and foundational machine learning concepts.
